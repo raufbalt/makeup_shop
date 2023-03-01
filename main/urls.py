@@ -30,6 +30,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from product.views import ProductViewSet
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Social",
@@ -44,6 +46,7 @@ schema_view = get_schema_view(
 )
 
 router = SimpleRouter()
+router.register('products', ProductViewSet)
 
 urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
