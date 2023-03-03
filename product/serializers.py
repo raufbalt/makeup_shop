@@ -7,6 +7,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImages
         exclude = ('id', 'title')
 
+
+
 class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -15,7 +17,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=False, required=False)
+    images = ProductImageSerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Product
@@ -23,21 +25,13 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=False, required=False)
+    images = ProductImageSerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Product
         fields = '__all__'
 
     def create(self, validated_data):
-        request = self.context.get('request')
-        product = Product.objects.create(**validated_data)
-        images_data = request.FILES.getlist('images')
-        images_objects = [ProductImages(product=product, image=image) for image in images_data]
-        ProductImages.objects.bulk_create(images_objects)
-        return product
-
-    def update(self, instance, validated_data):
         request = self.context.get('request')
         product = Product.objects.create(**validated_data)
         images_data = request.FILES.getlist('images')

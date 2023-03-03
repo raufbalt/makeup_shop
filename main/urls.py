@@ -31,6 +31,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from product.views import ProductViewSet
+from order.views import OrderCreateAPIView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -58,6 +59,8 @@ urlpatterns = [
     #main
     path('api/v1/', include(router.urls)),
     path('api/v1/accounts/', include('account.urls')),
+    #order
+    path('api/v1/order/', view=OrderCreateAPIView.as_view(), name="register"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

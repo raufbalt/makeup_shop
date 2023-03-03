@@ -4,8 +4,6 @@ from rest_framework import permissions
 from .models import Product
 from . import serializers
 
-
-
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
 
