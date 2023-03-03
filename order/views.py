@@ -25,7 +25,6 @@ class OrderCreateAPIView(CreateAPIView):
             address = request.data['address']
             phone_number = request.data['phone_number']
             product = request.data['product']
-            # order_number = request.data['order_number']
             quantity = request.data['quantity']
             price = request.data['price']
 
