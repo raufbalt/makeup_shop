@@ -1,6 +1,13 @@
 from rest_framework import serializers
-from product.models import Product, ProductImages
+from product.models import Product, ProductImages, Category
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    slug = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Category
+        fields = ['slug']
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:

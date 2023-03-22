@@ -1,8 +1,15 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
 
-from .models import Product
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+
+from rest_framework.generics import ListAPIView, GenericAPIView
+
+from .models import Product, Category
 from . import serializers
+from .serializers import CategorySerializer
+
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -20,6 +27,26 @@ class ProductViewSet(ModelViewSet):
         return [permissions.IsAuthenticatedOrReadOnly()]
 
     def perform_create(self, serializer):
+        category = self.request.data.get('category', None)
+        cat1 = get_object_or_404(Category, slug=category)
         serializer.save(
-            availability = self.request.data.get('availability', None)
+            availability = self.request.data.get('availability', None),
+            category = cat1
         )
+
+
+class CategoryListAPIView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = []
+
+class CategoryCreateAPIView(GenericAPIView):
+    serializer_class = serializers.CategorySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response('Created', status=201)

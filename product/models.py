@@ -1,6 +1,15 @@
 from django.db import models
 
+class Category(models.Model):
+    slug = models.SlugField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=30, unique=True)
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 class Availability:
 	have = 1
 	have_not = 2
@@ -14,6 +23,8 @@ class Product(models.Model):
     desc_ru = models.CharField(max_length=500, blank=True, default='Нет описания.')
     price = models.PositiveIntegerField(blank=True, default=0)
     availability = models.PositiveSmallIntegerField(choices=Availability.choice)
+
+    category = models.ForeignKey(Category, blank=True, on_delete=models.SET_NULL, null=True)
 
 
     class Meta:
