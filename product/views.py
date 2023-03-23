@@ -39,7 +39,6 @@ class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    authentication_classes = []
 
 class CategoryCreateAPIView(GenericAPIView):
     serializer_class = serializers.CategorySerializer
@@ -48,5 +47,10 @@ class CategoryCreateAPIView(GenericAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if not request.data['slug'] or not request.data['name']:
+            return Response('Bad request', status=403)
+        serializer.save(
+            slug = request.data['slug'],
+            name = request.data['name']
+        )
         return Response('Created', status=201)
