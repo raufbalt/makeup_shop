@@ -2,15 +2,10 @@ from django.db import models
 from django.utils.text import slugify
 
 class Category(models.Model):
-    slug = models.SlugField(max_length=50, primary_key=True, blank=False)
-    name = models.CharField(max_length=30, unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
+    name_eng = models.CharField(max_length=30, blank=False)
+    name_ru = models.CharField(max_length=30, blank=False)
     def __str__(self):
-        return self.name
+        return f'{self.name_eng} / {self.name_ru}'
 class Availability:
 	have = 1
 	have_not = 2

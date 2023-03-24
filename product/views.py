@@ -28,7 +28,7 @@ class ProductViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         category = self.request.data.get('category', None)
-        cat1 = get_object_or_404(Category, slug=category)
+        cat1 = get_object_or_404(Category, id=category)
         serializer.save(
             availability = self.request.data.get('availability', None),
             category = cat1
@@ -47,10 +47,10 @@ class CategoryCreateAPIView(GenericAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if not request.data['slug'] or not request.data['name']:
+        if not request.data['name_ru'] or not request.data['name_eng']:
             return Response('Bad request', status=403)
         serializer.save(
-            slug = request.data['slug'],
-            name = request.data['name']
+            name_ru = request.data['name_ru'],
+            name_eng = request.data['name_eng']
         )
         return Response('Created', status=201)
