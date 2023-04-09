@@ -1,3 +1,4 @@
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
 
@@ -69,5 +70,14 @@ class ProductFilterAPIView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         if not request.data['min'] or not request.data['max']:
             return Response('Bad request', status=403)
-        products = Product.objects.filter(price__lt=int(request.data['max']), price__gt=int(request.data['min'])).values()
-        return Response(products, status=200)
+        try:
+            products = Product.objects.filter(price__lt=int(request.data['max']),
+                                              price__gt=int(request.data['min']),
+                                              category=int(request.data['category'])).values()
+            return Response(products, status=200)
+        except MultiValueDictKeyError:
+            products = Product.objects.filter(price__lt=int(request.data['max']),
+                                              price__gt=int(request.data['min'])).values()
+            return Response(products, status=200)
+
+
