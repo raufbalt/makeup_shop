@@ -30,7 +30,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from product.views import ProductViewSet, CategoryListAPIView, CategoryCreateAPIView
+from product.views import ProductViewSet, CategoryListAPIView, CategoryCreateAPIView, ProductFilterAPIView
 from order.views import OrderCreateAPIView
 
 schema_view = get_schema_view(
@@ -62,8 +62,10 @@ urlpatterns = [
     #order
     path('api/v1/order/', view=OrderCreateAPIView.as_view(), name="register"),
     #categ
-    path('categorylist/', view=CategoryListAPIView.as_view(), name='categorylist'),
-    path('categorycreate/', view=CategoryCreateAPIView.as_view(), name='categorycreate')
+    path('api/v1/categorylist/', view=CategoryListAPIView.as_view(), name='categorylist'),
+    path('api/v1/categorycreate/', view=CategoryCreateAPIView.as_view(), name='categorycreate'),
+    #filter
+    path('api/v1/productfilter/', view=ProductFilterAPIView.as_view(), name='productfilter')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

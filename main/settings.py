@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'corsheaders',
+    'django_filters',
     #My apps
     'account',
     'product',
@@ -147,6 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication'

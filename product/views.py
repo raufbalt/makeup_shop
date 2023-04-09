@@ -1,6 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
 
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
@@ -8,11 +11,14 @@ from rest_framework.generics import ListAPIView, GenericAPIView
 
 from .models import Product, Category
 from . import serializers
-from .serializers import CategorySerializer
+from .serializers import CategorySerializer, ProductFilterSerializer
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filterset_fields = ('category','price')
+    search_fields = ('title',)
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -54,3 +60,14 @@ class CategoryCreateAPIView(GenericAPIView):
             name_eng = request.data['name_eng']
         )
         return Response('Created', status=201)
+
+class ProductFilterAPIView(GenericAPIView):
+    serializer_class = serializers.ProductSerializer
+    permission_classes = [permissions.AllowAny]
+    def get(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if not request.data['min'] or not request.data['max']:
+            return Response('Bad request', status=403)
+        products = Product.objects.filter(price__lt=int(request.data['max']), price__gt=int(request.data['min'])).values()
+        return Response(products, status=200)
