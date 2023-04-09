@@ -29,10 +29,3 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-class ProductFilterSerializer(serializers.ModelSerializer):
-    max = serializers.CharField(required=True)
-    min = serializers.CharField(required=True)
-    class Meta:
-        model = Product
-        fields = ('max', 'min')
-

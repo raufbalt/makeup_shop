@@ -12,7 +12,7 @@ from rest_framework.generics import ListAPIView, GenericAPIView
 
 from .models import Product, Category
 from . import serializers
-from .serializers import CategorySerializer, ProductFilterSerializer
+from .serializers import CategorySerializer
 
 
 class ProductViewSet(ModelViewSet):
